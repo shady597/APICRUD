@@ -1,7 +1,5 @@
-from sqlalchemy import String, create_engine, func
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, func
+from sqlalchemy import String, create_engine, func, Column, Integer
+from sqlalchemy.orm import declarative_base, sessionmaker
 from dotenv import load_dotenv
 from sqlalchemy import Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import relationship

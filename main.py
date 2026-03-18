@@ -2,9 +2,13 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import crud, schemas
+import db
+import pydantic
 
-from db import get_db
+from db import get_db, Base, engine
 import schemas
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
