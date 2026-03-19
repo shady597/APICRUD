@@ -27,5 +27,6 @@ class User(UserBase):
     is_active: bool
     created_at: datetime
     posts: List[Post] = []
+    
     class Config:
         from_attributes = True

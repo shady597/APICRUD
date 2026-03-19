@@ -2,15 +2,16 @@ import uvicorn
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 import crud, schemas
-import db
-import pydantic
-
-from db import get_db, Base, engine
-import schemas
+from db import get_db, Base, engine, Sessionlocal, User, Post
+from sqlalchemy import or_
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+@app.get("/home")
+def read_home():
+    return {"message": "Welcome to the home page"}
 
 @app.get("/users/", response_model=schemas.User)
 def get_user(db: Session = Depends(get_db), user_id: int = 1):
@@ -21,10 +22,15 @@ def get_user(db: Session = Depends(get_db), user_id: int = 1):
 
 @app.post("/users/", response_model=schemas.User)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_users_byemail(db, email=user.email)
-    if db_user:
+    existing_users = crud.get_users_byemail(db, email=user.email)
+    if existing_users:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+    new_user = User(email=user.email, name=user.name)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
 
 if __name__ == "__main__":
    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
