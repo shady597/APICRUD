@@ -19,7 +19,7 @@ export default function CreateUser() {
     setSuccess(null);
 
     try {
-      const res = await fetch(`${BASE_URL}/users`, {
+      const res = await fetch(`${BASE_URL}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
